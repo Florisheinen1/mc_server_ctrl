@@ -1,0 +1,40 @@
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    container_name: msc-minecraft
+    environment:
+      EULA: "true"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: ${RCON_PASSWORD}
+    volumes:
+      - ./data:/data
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    networks:
+      - internal
+      - external
+    ports:
+      - "25565:25565"
+    expose:
+      - ${RCON_PORT}
+  
+  backend:
+    build: ./backend
+    container_name: "msc-backend"
+    environment:
+      RCON_HOST: "minecraft:${RCON_PORT}"
+      RCON_PASSWORD: ${RCON_PASSWORD}
+    depends_on:
+      - minecraft
+    networks:
+      - internal
+      - external
+    ports:
+      - "3000:3000"
+
+networks:
+  internal:
+    internal: true
+  external:
+    external: false
