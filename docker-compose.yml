@@ -7,7 +7,7 @@ services:
       ENABLE_RCON: "true"
       RCON_PASSWORD: ${RCON_PASSWORD}
     volumes:
-      - ./data:/data
+      - data:/data
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -25,6 +25,8 @@ services:
     environment:
       RCON_HOST: "minecraft:${RCON_PORT}"
       RCON_PASSWORD: ${RCON_PASSWORD}
+    volumes:
+      - data:/data
     depends_on:
       - minecraft
     networks:
@@ -38,3 +40,6 @@ networks:
     internal: true
   external:
     external: false
+
+volumes:
+  data:
